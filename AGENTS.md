@@ -8,3 +8,5 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Sentiment classification and insights run through server functions in src/lib/sentiment.functions.ts calling the AI gateway; pure stats/preprocessing live in src/lib/analysis.ts (tested) so numbers are always computed from real rows.
