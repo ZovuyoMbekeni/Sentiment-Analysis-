@@ -37,7 +37,7 @@ export const classifyTexts = createServerFn({ method: "POST" })
         {
           role: "system",
           content:
-            "You are a sentiment classification model. For each numbered text, classify overall sentiment as Positive, Negative or Neutral. Consider negation, sarcasm, context and mixed statements. Give a calibrated confidence between 0 and 1 and a one-sentence explanation citing the cues in the text.",
+            "You are a sentiment classification model. For each numbered text, classify overall sentiment as Positive, Negative or Neutral. Consider negation, sarcasm, context and mixed statements. Treat emojis and emoticons (e.g. 😍 😡 😂 🙄 👍 💔 :) :( ) as strong sentiment signals: interpret their meaning, including sarcastic use (e.g. 'Great, crashed again 🙄' is Negative), and texts made only of emojis must still be classified. Mention the emojis you relied on in the explanation. Give a calibrated confidence between 0 and 1 and a one-sentence explanation citing the cues in the text.",
         },
         { role: "user", content: numbered },
       ],

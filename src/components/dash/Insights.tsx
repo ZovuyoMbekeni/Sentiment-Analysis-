@@ -16,15 +16,15 @@ export function Insights() {
 
   const s = computeStats(rows);
   const dominant = [["Positive", s.positive], ["Negative", s.negative], ["Neutral", s.neutral]].sort((a, b) => Number(b[1]) - Number(a[1]));
-  const tie = dominant[0][1] === dominant[1][1];
+  const tie = dominant[0]![1] === dominant[1]![1];
   const neg = topTerms(rows.filter((r) => r.label === "Negative"), 8);
   const pos = topTerms(rows.filter((r) => r.label === "Positive"), 8);
   const ts = timeSeries(rows.filter((r) => r.source === "csv"));
   let trend: string | null = null;
   if (ts.length >= 2) {
     const share = (t: (typeof ts)[number]) => { const n = t.Positive + t.Negative + t.Neutral; return n ? (t.Positive / n) * 100 : 0; };
-    const a = share(ts[0]), b = share(ts[ts.length - 1]);
-    trend = `Positive share moved from ${a.toFixed(0)}% (${ts[0].period}) to ${b.toFixed(0)}% (${ts[ts.length - 1].period}).`;
+    const a = share(ts[0]!), b = share(ts[ts.length - 1]!);
+    trend = `Positive share moved from ${a.toFixed(0)}% (${ts[0]!.period}) to ${b.toFixed(0)}% (${ts[ts.length - 1]!.period}).`;
   }
 
   async function run() {
@@ -46,7 +46,7 @@ export function Insights() {
         <Panel className="space-y-4">
           <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground">Calculated statistics</p>
           <ul className="list-disc space-y-1 pl-5 text-sm">
-            <li>Dominant sentiment: <strong>{tie ? "No single dominant sentiment (tie)" : dominant[0][0]}</strong> across {s.total} texts.</li>
+            <li>Dominant sentiment: <strong>{tie ? "No single dominant sentiment (tie)" : dominant[0]![0]}</strong> across {s.total} texts.</li>
             <li>{s.pctPositive}% positive, {s.pctNegative}% negative, {s.pctNeutral}% neutral.</li>
             <li>Average model confidence: {(s.avgConfidence * 100).toFixed(0)}%.</li>
             {trend && <li>{trend}</li>}

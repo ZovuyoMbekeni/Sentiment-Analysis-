@@ -28,3 +28,9 @@ describe("analysis", () => {
     expect(timeSeries([row("Positive"), row("Negative")])).toEqual([]);
   });
 });
+
+import { cleanText as _clean } from "@/lib/analysis";
+import { it as _it, expect as _expect } from "vitest";
+_it("keeps emojis when cleaning text so they can be analysed", () => {
+  _expect(_clean("Love it 😍👍 <b>x</b>")).toContain("😍👍");
+});

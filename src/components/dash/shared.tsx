@@ -10,7 +10,8 @@ export const labelStyles: Record<Label, string> = {
 
 export function SentimentBadge({ label }: { label: Label }) {
   return (
-    <span className={cn("inline-flex rounded-full border px-2.5 py-0.5 text-xs font-medium", labelStyles[label])}>
+    <span className={cn("inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-medium", labelStyles[label])}>
+      <span className="size-1.5 rounded-full bg-current shadow-[0_0_8px_currentColor]" />
       {label}
     </span>
   );
@@ -18,12 +19,12 @@ export function SentimentBadge({ label }: { label: Label }) {
 
 export function Section({ title, subtitle, step, children, actions }: { title: string; subtitle?: string; step?: string; children: ReactNode; actions?: ReactNode }) {
   return (
-    <section className="space-y-5">
+    <section className="space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          {step && <p className="font-mono text-xs uppercase tracking-widest text-primary">{step}</p>}
-          <h2 className="text-2xl font-semibold tracking-tight">{title}</h2>
-          {subtitle && <p className="mt-1 max-w-2xl text-sm text-muted-foreground">{subtitle}</p>}
+          {step && <p className="mb-1 font-mono text-[11px] uppercase tracking-[0.2em] text-primary">{step}</p>}
+          <h2 className="text-3xl font-semibold tracking-tight">{title}</h2>
+          {subtitle && <p className="mt-2 max-w-2xl text-sm text-muted-foreground">{subtitle}</p>}
         </div>
         {actions}
       </div>
@@ -33,12 +34,12 @@ export function Section({ title, subtitle, step, children, actions }: { title: s
 }
 
 export function Panel({ children, className }: { children: ReactNode; className?: string }) {
-  return <div className={cn("rounded-lg border bg-card p-5 shadow-sm", className)}>{children}</div>;
+  return <div className={cn("rounded-xl border bg-card/80 p-5 shadow-glow backdrop-blur", className)}>{children}</div>;
 }
 
 export function EmptyState({ children }: { children?: ReactNode }) {
   return (
-    <div className="rounded-lg border border-dashed bg-muted/40 p-10 text-center text-sm text-muted-foreground">
+    <div className="rounded-xl border border-dashed bg-card/40 p-12 text-center text-sm text-muted-foreground">
       {children ?? "No sentiment data available yet. Upload a CSV dataset or analyse text to begin."}
     </div>
   );
