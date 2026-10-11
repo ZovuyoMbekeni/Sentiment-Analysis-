@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
@@ -9,12 +9,27 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Panel, Section, SentimentBadge } from "./shared";
 
+const EMOJIS = ["😍", "👍", "😊", "🤩", "🥳", "😡", "🙄", "😢", "💔", "👎", "😂", "🤔"] as const;
+
 export function AnalyseText() {
   const classify = useServerFn(classifyTexts);
   const { addRows } = useResults();
   const [text, setText] = useState("");
   const [busy, setBusy] = useState(false);
   const [last, setLast] = useState<(Classification & { cleaned: string }) | null>(null);
+  const areaRef = useRef<HTMLTextAreaElement>(null);
+
+  function insertEmoji(e: string) {
+    const el = areaRef.current;
+    const at = el ? (el.selectionStart ?? text.length) : text.length;
+    const next = text.slice(0, at) + e + text.slice(at);
+    setText(next);
+    requestAnimationFrame(() => {
+      el?.focus();
+      const pos = at + e.length;
+      el?.setSelectionRange(pos, pos);
+    });
+  }
 
   async function run() {
     const cleaned = cleanText(text);
