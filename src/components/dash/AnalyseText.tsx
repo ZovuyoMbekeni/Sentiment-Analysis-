@@ -52,12 +52,27 @@ export function AnalyseText() {
     <Section title="Analyse Text" step="Steps 2–4" subtitle="Text is cleaned (whitespace, HTML, links removed) and sent to a large language model that classifies its sentiment. Each result is added to the dashboard.">
       <Panel className="space-y-4">
         <Textarea
+          ref={areaRef}
           rows={6}
           value={text}
           onChange={(e) => setText(e.target.value)}
           placeholder="e.g. I really enjoyed using this application. It is easy to use and very helpful."
           aria-label="Text to analyse"
         />
+        <div className="flex flex-wrap items-center gap-1.5">
+          <span className="mr-1 text-xs text-muted-foreground">Tap to insert:</span>
+          {EMOJIS.map((e) => (
+            <button
+              key={e}
+              type="button"
+              onClick={() => insertEmoji(e)}
+              aria-label={`Insert emoji ${e}`}
+              className="grid size-9 place-items-center rounded-lg border bg-card/60 text-lg transition-colors hover:border-primary/40 hover:bg-primary/10"
+            >
+              {e}
+            </button>
+          ))}
+        </div>
         <div className="flex items-center justify-between gap-3">
           <span className="text-xs text-muted-foreground">{text.length} / 4000</span>
           <Button onClick={run} disabled={busy}>
