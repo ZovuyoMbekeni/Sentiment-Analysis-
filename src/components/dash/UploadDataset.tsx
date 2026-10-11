@@ -52,20 +52,20 @@ export function UploadDataset({ onDone }: { onDone: () => void }) {
   }
 
   async function analyse() {
-    if (!textCol) return toast.error("Select the column that contains the text.");
+    if (!textCol) { toast.error("Select the column that contains the text."); return; }
     const prepared = data
       .slice(0, MAX_ROWS)
       .map((r) => ({ original: r[textCol] ?? "", cleaned: cleanText(r[textCol]).slice(0, 4000), date: dateCol !== NONE ? parseDate(r[dateCol]) : null }))
       .filter((r) => r.cleaned.length > 0);
     const skipped = Math.min(data.length, MAX_ROWS) - prepared.length;
-    if (!prepared.length) return toast.error(`Column "${textCol}" contains no text.`);
+    if (!prepared.length) { toast.error(`Column "${textCol}" contains no text.`); return; }
     setProgress({ done: 0, total: prepared.length });
     const out: ResultRow[] = [];
     try {
       for (let i = 0; i < prepared.length; i += BATCH) {
         const chunk = prepared.slice(i, i + BATCH);
         const res = await classify({ data: { texts: chunk.map((c) => c.cleaned) } });
-        res.forEach((r, j) => out.push({ id: crypto.randomUUID(), ...chunk[j], ...r, source: "csv" }));
+        res.forEach((r, j) => out.push({ id: crypto.randomUUID(), ...chunk[j]!, ...r, source: "csv" }));
         setProgress({ done: out.length, total: prepared.length });
       }
       addRows(out);
