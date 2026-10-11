@@ -18,11 +18,12 @@ export function AnalyseText() {
 
   async function run() {
     const cleaned = cleanText(text);
-    if (!cleaned) return toast.error("Please enter some text to analyse.");
-    if (cleaned.length > 4000) return toast.error("Text is too long (max 4,000 characters).");
+    if (!cleaned) { toast.error("Please enter some text to analyse."); return; }
+    if (cleaned.length > 4000) { toast.error("Text is too long (max 4,000 characters)."); return; }
     setBusy(true);
     try {
       const [r] = await classify({ data: { texts: [cleaned] } });
+      if (!r) throw new Error("Model returned no classification.");
       setLast({ ...r, cleaned });
       addRows([{ id: crypto.randomUUID(), original: text, cleaned, ...r, date: new Date().toISOString().slice(0, 10), source: "text" }]);
     } catch (e) {
