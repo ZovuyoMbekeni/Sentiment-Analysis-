@@ -46,7 +46,7 @@ export function Insights() {
         <Panel className="space-y-4">
           <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground">Calculated statistics</p>
           <ul className="list-disc space-y-1 pl-5 text-sm">
-            <li>Dominant sentiment: <strong>{tie ? "No single dominant sentiment (tie)" : dominant[0][0]}</strong> across {s.total} texts.</li>
+            <li>Dominant sentiment: <strong>{tie ? "No single dominant sentiment (tie)" : dominant[0]![0]}</strong> across {s.total} texts.</li>
             <li>{s.pctPositive}% positive, {s.pctNegative}% negative, {s.pctNeutral}% neutral.</li>
             <li>Average model confidence: {(s.avgConfidence * 100).toFixed(0)}%.</li>
             {trend && <li>{trend}</li>}

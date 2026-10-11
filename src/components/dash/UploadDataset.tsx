@@ -27,8 +27,8 @@ export function UploadDataset({ onDone }: { onDone: () => void }) {
 
   function onFile(f: File | undefined) {
     if (!f) return;
-    if (!/\.csv$/i.test(f.name)) return toast.error("Invalid file format. Please upload a .csv file.");
-    if (f.size > 10 * 1024 * 1024) return toast.error("File is too large (max 10 MB).");
+    if (!/\.csv$/i.test(f.name)) { toast.error("Invalid file format. Please upload a .csv file."); return; }
+    if (f.size > 10 * 1024 * 1024) { toast.error("File is too large (max 10 MB)."); return; }
     Papa.parse<Record<string, string>>(f, {
       header: true,
       skipEmptyLines: true,
@@ -43,7 +43,7 @@ export function UploadDataset({ onDone }: { onDone: () => void }) {
         setCols(fields);
         const guessText = fields.find((c) => /text|review|comment|feedback|content|message|tweet/i.test(c)) ?? fields[0];
         const guessDate = fields.find((c) => /date|time|created/i.test(c));
-        setTextCol(guessText);
+        setTextCol(guessText ?? "");
         setDateCol(guessDate ?? NONE);
         if (res.data.length > MAX_ROWS) toast.warning(`Large dataset: only the first ${MAX_ROWS} rows will be analysed.`);
       },
