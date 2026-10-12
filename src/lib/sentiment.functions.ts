@@ -1,8 +1,13 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
-const GATEWAY = "https://ai.gateway.lovable.dev/v1/chat/completions";
-const MODEL = "google/gemini-3-flash-preview";
+// On Lovable hosting the built-in LOVABLE_API_KEY is used. When self-hosting
+// (e.g. Vercel), set AI_API_KEY (and optionally AI_BASE_URL / AI_MODEL) to use
+// your own provider, e.g. Google AI Studio's OpenAI-compatible endpoint:
+//   AI_BASE_URL=https://generativelanguage.googleapis.com/v1beta/openai/chat/completions
+//   AI_MODEL=gemini-2.5-flash
+const DEFAULT_GATEWAY = "https://ai.gateway.lovable.dev/v1/chat/completions";
+const DEFAULT_MODEL = "google/gemini-3-flash-preview";
 
 export type Label = "Positive" | "Negative" | "Neutral";
 export interface Classification {
