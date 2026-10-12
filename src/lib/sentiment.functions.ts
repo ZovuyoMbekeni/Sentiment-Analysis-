@@ -26,10 +26,6 @@ async function callGateway(body: Record<string, unknown>) {
     headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
     body: JSON.stringify({ ...body, model }),
   });
-    method: "POST",
-    headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-  });
   if (res.status === 429) throw new Error("Rate limit reached. Please wait a moment and try again.");
   if (res.status === 402) throw new Error("AI credits exhausted. Add credits in workspace settings.");
   if (!res.ok) throw new Error(`AI model request failed (${res.status}).`);
