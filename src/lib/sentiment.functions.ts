@@ -1,8 +1,13 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
-const GATEWAY = "https://ai.gateway.lovable.dev/v1/chat/completions";
-const MODEL = "google/gemini-3-flash-preview";
+// On Lovable hosting the built-in LOVABLE_API_KEY is used. When self-hosting
+// (e.g. Vercel), set AI_API_KEY (and optionally AI_BASE_URL / AI_MODEL) to use
+// your own provider, e.g. Google AI Studio's OpenAI-compatible endpoint:
+//   AI_BASE_URL=https://generativelanguage.googleapis.com/v1beta/openai/chat/completions
+//   AI_MODEL=gemini-2.5-flash
+const DEFAULT_GATEWAY = "https://ai.gateway.lovable.dev/v1/chat/completions";
+const DEFAULT_MODEL = "google/gemini-3-flash-preview";
 
 export type Label = "Positive" | "Negative" | "Neutral";
 export interface Classification {
@@ -11,13 +16,15 @@ export interface Classification {
   explanation: string;
 }
 
-async function callGateway(body: unknown) {
-  const key = process.env["LOVABLE_API_KEY"];
-  if (!key) throw new Error("AI service is not configured (missing LOVABLE_API_KEY).");
-  const res = await fetch(GATEWAY, {
+async function callGateway(body: Record<string, unknown>) {
+  const key = process.env["AI_API_KEY"] ?? process.env["LOVABLE_API_KEY"];
+  if (!key) throw new Error("AI service is not configured (missing AI_API_KEY).");
+  const url = process.env["AI_BASE_URL"] ?? DEFAULT_GATEWAY;
+  const model = process.env["AI_MODEL"] ?? DEFAULT_MODEL;
+  const res = await fetch(url, {
     method: "POST",
     headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
-    body: JSON.stringify(body),
+    body: JSON.stringify({ ...body, model }),
   });
   if (res.status === 429) throw new Error("Rate limit reached. Please wait a moment and try again.");
   if (res.status === 402) throw new Error("AI credits exhausted. Add credits in workspace settings.");
@@ -32,7 +39,7 @@ export const classifyTexts = createServerFn({ method: "POST" })
   .handler(async ({ data }): Promise<Classification[]> => {
     const numbered = data.texts.map((t, i) => `[${i}] ${t}`).join("\n");
     const json = await callGateway({
-      model: MODEL,
+
       messages: [
         {
           role: "system",
@@ -97,7 +104,7 @@ export const generateInsights = createServerFn({ method: "POST" })
   )
   .handler(async ({ data }) => {
     const json = await callGateway({
-      model: MODEL,
+
       messages: [
         {
           role: "system",
