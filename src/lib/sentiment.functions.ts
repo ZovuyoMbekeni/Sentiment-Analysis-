@@ -16,10 +16,16 @@ export interface Classification {
   explanation: string;
 }
 
-async function callGateway(body: unknown) {
-  const key = process.env["LOVABLE_API_KEY"];
-  if (!key) throw new Error("AI service is not configured (missing LOVABLE_API_KEY).");
-  const res = await fetch(GATEWAY, {
+async function callGateway(body: Record<string, unknown>) {
+  const key = process.env["AI_API_KEY"] ?? process.env["LOVABLE_API_KEY"];
+  if (!key) throw new Error("AI service is not configured (missing AI_API_KEY).");
+  const url = process.env["AI_BASE_URL"] ?? DEFAULT_GATEWAY;
+  const model = process.env["AI_MODEL"] ?? DEFAULT_MODEL;
+  const res = await fetch(url, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
+    body: JSON.stringify({ ...body, model }),
+  });
     method: "POST",
     headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
     body: JSON.stringify(body),
