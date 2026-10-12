@@ -39,7 +39,7 @@ export const classifyTexts = createServerFn({ method: "POST" })
   .handler(async ({ data }): Promise<Classification[]> => {
     const numbered = data.texts.map((t, i) => `[${i}] ${t}`).join("\n");
     const json = await callGateway({
-      model: MODEL,
+
       messages: [
         {
           role: "system",
@@ -104,7 +104,7 @@ export const generateInsights = createServerFn({ method: "POST" })
   )
   .handler(async ({ data }) => {
     const json = await callGateway({
-      model: MODEL,
+
       messages: [
         {
           role: "system",
